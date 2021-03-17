@@ -61,6 +61,7 @@ jobs:
         git add .
         git commit -m "${{ env.NEW_TAG }}" -a
     - name: Push changes
+      if: steps.check_tags.outputs.status == 'success'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.ACCESS_TOKEN }}
