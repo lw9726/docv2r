@@ -29,7 +29,8 @@ jobs:
         old_tag=$(cat ReleaseTag | head -n1)
         echo $old_tag
         
-        echo "$PWD"
+        #echo "$PWD"
+        pwd
         ls -trogh
         
         if [ "$NEW_TAG" = "$old_tag" ]; then
@@ -40,7 +41,8 @@ jobs:
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
           echo "old_tag=$old_tag" >> $GITHUB_ENV
           echo "FLAG=True" >> $GITHUB_ENV
-          echo "${{ env.NEW_TAG }}" > ReleaseTag
+          #echo "${{ env.NEW_TAG }}" > ReleaseTag
+          echo "$NEW_TAG" > ReleaseTag
           #sed -i 's/${{ env.old_tag }}/${{ env.NEW_TAG }}/g' ReleaseTag
           ls -trogh
           cat ReleaseTag
@@ -49,6 +51,7 @@ jobs:
     - name: Commit files
       if: env.FLAG == 'True'
       run: |
+        echo "{{ env.FLAG }}"
         git config --local user.email "${{ secrets.EMAIL }}"
         git config --local user.name "${{ secrets.USERNAME }}"
         #cd {{ env.root }}
