@@ -20,7 +20,7 @@ jobs:
       with:
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
         fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
-    - name: Check tags changes
+    - name: Check tags changes & Update info
       run: |
         NEW_TAG=$(wget -qO- -t1 -T2 "https://api.github.com/repos/v2fly/v2ray-core/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
         echo $NEW_TAG
@@ -28,39 +28,23 @@ jobs:
         old_tag=$(cat ReleaseTag | head -n1)
         echo $old_tag
         
+        echo "$PWD"
+        ls -trogh
+        
         if [ "$NEW_TAG" = "$old_tag" ]; then
           echo '$NEW_TAG eq $old_tag'
         else
           echo '$NEW_TAG not eq $old_tag'
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
           echo "old_tag=$old_tag" >> $GITHUB_ENV
+          
+          sed -i 's/${{ env.old_tag }}/${{ env.NEW_TAG }}/g' ReleaseTag
+          ls -trogh
+          cat ReleaseTag
+          
         fi
         
-        ls -trogh
-        
-    #- name: Clone Source Code
-    #  run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH docv2r
-      
-    - name: Update info
-      run: |
-        cd docv2r
-        ls -trogh
-        echo "$PWD"
-        echo "root=$PWD" >> $GITHUB_ENV
-        
-        #cd docker-v2r
-        echo "action_state=yellow" >> $GITHUB_ENV
-        echo $env
-        cd {{env.root}}
-
-        ls -trogh
-        cat ReleaseTag
-
-        sed -i 's/${{ env.old_tag }}/${{ env.NEW_TAG }}/g' ReleaseTag
-        ls -trogh
-        cat ReleaseTag
-        
-        
+            
     - name: Commit files
       run: |
         git config --local user.email "${{ secrets.EMAIL }}"
