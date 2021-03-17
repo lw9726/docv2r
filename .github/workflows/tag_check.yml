@@ -35,9 +35,10 @@ jobs:
           echo '$NEW_TAG eq $old_tag'
         else
           echo '$NEW_TAG not eq $old_tag'
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-          echo "old_tag=$old_tag" >> $GITHUB_ENV
-          echo "${{ env.NEW_TAG }}" > ReleaseTag
+          echo $NEW_TAG > ReleaseTag
+          #echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          #echo "old_tag=$old_tag" >> $GITHUB_ENV
+          #echo "${{ env.NEW_TAG }}" > ReleaseTag
           #sed -i 's/${{ env.old_tag }}/${{ env.NEW_TAG }}/g' ReleaseTag
           ls -trogh
           cat ReleaseTag
