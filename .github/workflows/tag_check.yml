@@ -41,15 +41,13 @@ jobs:
           sed -i 's/${{ env.old_tag }}/${{ env.NEW_TAG }}/g' ReleaseTag
           ls -trogh
           cat ReleaseTag
-          
         fi
-        
             
     - name: Commit files
       run: |
         git config --local user.email "${{ secrets.EMAIL }}"
         git config --local user.name "${{ secrets.USERNAME }}"
-        cd {{ env.root }}
+        #cd {{ env.root }}
         git add .
         git commit -m "${{ env.NEW_TAG }}" -a
     - name: Push changes
