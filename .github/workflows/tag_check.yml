@@ -13,7 +13,7 @@ env:
 
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -38,6 +38,7 @@ jobs:
           echo $NEW_TAG > ReleaseTag
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
           echo "old_tag=$old_tag" >> $GITHUB_ENV
+          echo "FLAG=True" >> $GITHUB_ENV
           echo "${{ env.NEW_TAG }}" > ReleaseTag
           #sed -i 's/${{ env.old_tag }}/${{ env.NEW_TAG }}/g' ReleaseTag
           ls -trogh
@@ -45,6 +46,7 @@ jobs:
         fi
             
     - name: Commit files
+      if: env.FLAG == 'True'
       run: |
         git config --local user.email "${{ secrets.EMAIL }}"
         git config --local user.name "${{ secrets.USERNAME }}"
