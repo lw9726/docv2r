@@ -38,13 +38,14 @@ jobs:
         
     - name: Clone Source Code
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH docv2r
+      
+    - name: Update info
+      run: |
         cd docv2r
         ls -trogh
         echo "$PWD"
         echo "root=$PWD" >> $GITHUB_ENV
-      
-    - name: Update info
-      run: |
+        
         #cd docker-v2r
         echo "action_state=yellow" >> $GITHUB_ENV
         echo $env
