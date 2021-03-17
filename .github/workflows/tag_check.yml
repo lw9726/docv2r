@@ -3,7 +3,7 @@ name: tags check
 on:
   workflow_dispatch:
   schedule:
-    - cron: "* */2 * * *"
+    - cron: "* */12 * * *"
   #release:
   #  types: [published]
 
