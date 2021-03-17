@@ -51,7 +51,7 @@ jobs:
     - name: Commit files
       if: env.FLAG == 'True'
       run: |
-        echo "{{ env.FLAG }}"
+        echo {{ env.FLAG }}
         git config --local user.email "${{ secrets.EMAIL }}"
         git config --local user.name "${{ secrets.USERNAME }}"
         #cd {{ env.root }}
