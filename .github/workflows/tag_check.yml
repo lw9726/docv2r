@@ -3,9 +3,9 @@ name: tags check
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/59 * * * *"
-  release:
-    types: [published]
+    - cron: "* */2 * * *"
+  #release:
+  #  types: [published]
 
 env:
   REPO_URL: https://github.com/lw9726/docv2r
