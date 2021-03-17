@@ -40,8 +40,7 @@ jobs:
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH docv2r
         cd docv2r
         ls -trogh
-        #rm -rf docker-v2r
-        echo $PWD
+        echo "$PWD"
         echo "root=$PWD" >> $GITHUB_ENV
       
     - name: Update info
