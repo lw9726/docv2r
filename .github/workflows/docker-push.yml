@@ -2,9 +2,9 @@ on:
   push:
     paths:
       - "ReleaseTag"
-      - "v2ray.sh"
-      - "Dockerfile"
-      - ".github/workflows/docker-push.yml"
+      #- "v2ray.sh"
+      #- "Dockerfile"
+      #- ".github/workflows/docker-push.yml"
 
 name: docker push
 jobs:
