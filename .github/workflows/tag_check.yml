@@ -1,0 +1,75 @@
+name: check tags
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #  - cron: "*/5 * * * *"
+  release:
+    types: [published]
+
+env:
+  REPO_URL: https://github.com/lw9726/docv2r
+  REPO_BRANCH: master
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+    - name: Check tags changes
+      run: |
+        NEW_TAG=$(wget -qO- -t1 -T2 "https://api.github.com/repos/v2fly/v2ray-core/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
+        echo $NEW_TAG
+        
+        old_tag=$(cat ReleaseTag | head -n1)
+        echo $old_tag
+        
+        if [ "$NEW_TAG" = "$old_tag" ]; then
+          echo '$NEW_TAG eq $old_tag'
+        else
+          echo '$NEW_TAG not eq $old_tag'
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          echo "old_tag=$old_tag" >> $GITHUB_ENV
+        fi
+        
+    - name: Clone Source Code
+      run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH docv2r
+        cd docv2r
+        ls -trogh
+        #rm -rf docker-v2r
+        echo $PWD
+        echo "root=$PWD" >> $GITHUB_ENV
+      
+    - name: Update info
+      run: |
+        #cd docker-v2r
+        #echo "::set-env name=VROOT::$PWD"
+        #echo "action_state=yellow" >> $GITHUB_ENV
+        #echo "VROOT=$PWD" >> $GITHUB_ENV
+        echo $env
+        cd {{env.root}}
+
+        ls -trogh
+        cat ReleaseTag
+
+        sed -i 's/${{ env.old_tag }}/${{ env.NEW_TAG }}/g' ReleaseTag
+        ls -trogh
+        cat ReleaseTag
+        
+        
+    - name: Commit files
+      run: |
+        git config --local user.email "${{ secrets.EMAIL }}"
+        git config --local user.name "${{ secrets.USERNAME }}"
+        cd {{ env.root }}
+        git add .
+        git commit -m "${{ env.NEW_TAG }}" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        branch: ${{ env.REPO_BRANCH }}
