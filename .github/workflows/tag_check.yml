@@ -10,6 +10,7 @@ on:
 env:
   REPO_URL: https://github.com/lw9726/docv2r
   REPO_BRANCH: master
+  FLAG: False
 
 
 jobs:
